@@ -38,7 +38,7 @@ export class FileController {
     @UploadedFile(FileValidationPipe) file: Express.Multer.File,
   ): string {
     writeFileSync(
-      resolve(this.path, v4(), extname(file.originalname)),
+      resolve(this.path, v4() + extname(file.originalname)),
       file.buffer,
     );
 
