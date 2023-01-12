@@ -9,9 +9,10 @@ import {
   Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { createReadStream } from 'fs';
-import { resolve } from 'path';
+import { createReadStream, writeFileSync } from 'fs';
+import { extname, resolve } from 'path';
 import { Express } from 'express';
+import { v4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
 import { ProfilingInterceptor } from './interceptors/profiling.interceptor';
 import { FileValidationPipe } from './pipes/file-validation.pipe';
@@ -36,6 +37,11 @@ export class FileController {
   createFile(
     @UploadedFile(FileValidationPipe) file: Express.Multer.File,
   ): string {
+    writeFileSync(
+      resolve(this.path, v4(), extname(file.originalname)),
+      file.buffer,
+    );
+
     this.logger.log(`Saved file: ${file.filename} (${file.size} bytes)`);
 
     return file.filename;
