@@ -6,7 +6,6 @@ import {
   UseInterceptors,
   UploadedFile,
   StreamableFile,
-  ParseFilePipe,
   Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,6 +14,7 @@ import { resolve } from 'path';
 import { Express } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { ProfilingInterceptor } from './interceptors/profiling.interceptor';
+import { FileValidationPipe } from './pipes/file-validation.pipe';
 
 @Controller('file')
 export class FileController {
@@ -33,7 +33,9 @@ export class FileController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  createFile(@UploadedFile(ParseFilePipe) file: Express.Multer.File): string {
+  createFile(
+    @UploadedFile(FileValidationPipe) file: Express.Multer.File,
+  ): string {
     this.logger.log(`Saved file: ${file.filename} (${file.size} bytes)`);
 
     return file.filename;
