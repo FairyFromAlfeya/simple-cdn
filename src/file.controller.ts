@@ -22,7 +22,7 @@ export class FileController {
   private readonly logger = new Logger('FileController');
 
   constructor(private readonly configService: ConfigService) {
-    this.path = this.configService.get('UPLOADS_PATH', './');
+    this.path = this.configService.get('UPLOADS_PATH', './uploads');
   }
 
   @Get(':id')
@@ -35,6 +35,7 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file'))
   createFile(@UploadedFile(ParseFilePipe) file: Express.Multer.File): string {
     this.logger.log(`Saved file: ${file.filename} (${file.size} bytes)`);
+
     return file.filename;
   }
 }
