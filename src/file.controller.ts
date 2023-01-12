@@ -40,6 +40,7 @@ export class FileController {
     writeFileSync(
       resolve(this.path, v4() + extname(file.originalname)),
       file.buffer,
+      { flag: 'w' },
     );
 
     this.logger.log(`Saved file: ${file.filename} (${file.size} bytes)`);
