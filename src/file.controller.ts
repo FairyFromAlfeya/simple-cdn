@@ -37,14 +37,12 @@ export class FileController {
   createFile(
     @UploadedFile(FileValidationPipe) file: Express.Multer.File,
   ): string {
-    writeFileSync(
-      resolve(this.path, v4() + extname(file.originalname)),
-      file.buffer,
-      { flag: 'w' },
-    );
+    const filename = v4() + extname(file.originalname);
 
-    this.logger.log(`Saved file: ${file.filename} (${file.size} bytes)`);
+    writeFileSync(resolve(this.path, filename), file.buffer, { flag: 'w' });
 
-    return file.filename;
+    this.logger.log(`Saved file: ${filename} (${file.size} bytes)`);
+
+    return filename;
   }
 }
